@@ -41,6 +41,10 @@ public abstract class CoreRest {
         this.view = view;
     }
 
+    protected final void getText(@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<String> listener){
+        request(new CoreStringRequest(Method.GET.value, url, mergeHeaders(headers), (String) null, listener));
+    }
+
     protected final void requestText(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<String> listener){
         request(new CoreStringRequest(method.value, url, mergeHeaders(headers), params, listener));
     }
@@ -49,12 +53,20 @@ public abstract class CoreRest {
         request(new CoreStringRequest(method.value, url, mergeHeaders(headers), body, listener));
     }
 
+    protected final void getJsonObject(@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<JSONObject> listener){
+        request(new CoreJSONObjectRequest(Method.GET.value, url, mergeHeaders(headers), (String) null, listener));
+    }
+
     protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<JSONObject> listener){
         request(new CoreJSONObjectRequest(method.value, url, mergeHeaders(headers), params, listener));
     }
 
     protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable String body, @NonNull CoreResponseListener<JSONObject> listener){
         request(new CoreJSONObjectRequest(method.value, url, mergeHeaders(headers), body, listener));
+    }
+
+    protected final void getJsonArray(@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<JSONArray> listener){
+        request(new CoreJSONArrayRequest(Method.GET.value, url, mergeHeaders(headers), (String) null, listener));
     }
 
     protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<JSONArray> listener){
@@ -76,9 +88,10 @@ public abstract class CoreRest {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT );
     }
 
-    private Map<String, String> mergeHeaders (Map<String, String> headers){
+    private Map<String, String> mergeHeaders (@Nullable Map<String, String> headers){
         Map<String, String> result = getDefaultHeaders();
-        result.putAll(headers);
+        if(headers != null)
+            result.putAll(headers);
         return result;
     }
 
