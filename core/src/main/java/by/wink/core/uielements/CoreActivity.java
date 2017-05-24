@@ -10,14 +10,24 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
+ * A {@link AppCompatActivity} class with the RequestQueue of the currents {@link by.wink.core.rest.CoreRest} requests
+ *
  * Created by zoid23 on 23/05/17.
  */
 
 public class CoreActivity extends AppCompatActivity implements VolleyUi  {
 
     private static final String TAG = "ACTIVITY_VOLLEY";
+
+    /** The {@link RequestQueue} */
     RequestQueue requestsQueue;
 
+    /**
+     * Add the {@link Request} at the {@link #requestsQueue}
+     *
+     * @param request the request to add
+     * @return the request passed as a param
+     */
     public Request bindToRequest (Request request){
         if(requestsQueue == null)
             requestsQueue = Volley.newRequestQueue(this);
@@ -33,6 +43,10 @@ public class CoreActivity extends AppCompatActivity implements VolleyUi  {
         cancellAllRequests();
     }
 
+    /**
+     * Return the current {@link Context}
+     * @return context
+     */
     @Override
     public Context getContext() {
         return this;
