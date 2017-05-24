@@ -42,7 +42,7 @@ public abstract class CoreResponseListener<T> implements Response.Listener<T> {
         return resHeaders;
     }
 
-    public void setResHeaders(Map<String, String> resHeaders) {
+    void setResHeaders(Map<String, String> resHeaders) {
         this.resHeaders = resHeaders;
     }
 }
