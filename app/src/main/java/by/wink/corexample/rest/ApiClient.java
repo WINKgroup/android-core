@@ -1,6 +1,10 @@
 package by.wink.corexample.rest;
 
+import com.android.volley.RetryPolicy;
+
 import org.json.JSONArray;
+
+import java.util.Map;
 
 import by.wink.core.rest.CoreResponseListener;
 import by.wink.core.rest.CoreRest;
@@ -18,7 +22,18 @@ public class ApiClient extends CoreRest {
         super(view);
     }
 
+    @Override
+    protected Map<String, String> getDefaultHeaders() {
+        return super.getDefaultHeaders();
+    }
+
+    @Override
+    protected RetryPolicy getDefaultRetryPolicy() {
+        return super.getDefaultRetryPolicy();
+    }
+
     public void getDevs (CoreResponseListener<JSONArray> responseListener){
         getJsonArray(BASE_URL+"592572c21200005100686f0b", null, responseListener);
     }
+
 }
