@@ -7,6 +7,12 @@ import org.json.JSONException;
 import by.wink.core.CoreController;
 
 /**
+ * The listener used for the {@link CoreRest} requests.
+ * This class implement the onError method from {@link CoreResponseListener}
+ * passing to the {@link by.wink.core.CoreController.ParsedResponse} the localizedErrorMessage.
+ *
+ * @param <T> the response type
+ *
  * Created by zoid23 on 23/05/17.
  */
 
@@ -14,6 +20,11 @@ public abstract class CoreDefaultErrorResponseListener<T> extends CoreResponseLi
 
     private CoreController.ParsedResponse response;
 
+    /**
+     * Contstructor
+     *
+     * @param response the {@link by.wink.core.CoreController.ParsedResponse} response
+     */
     public CoreDefaultErrorResponseListener (CoreController.ParsedResponse response){
         this.response = response;
     }
