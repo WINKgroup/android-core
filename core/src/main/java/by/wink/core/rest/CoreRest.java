@@ -21,26 +21,48 @@ import by.wink.core.uielements.VolleyUi;
 
 public abstract class CoreRest {
 
+    protected enum Method {
+        GET(Request.Method.GET),
+        POST(Request.Method.POST),
+        PUT(Request.Method.PUT),
+        HEAD(Request.Method.HEAD),
+        PATCH(Request.Method.PATCH),
+        TRACE(Request.Method.TRACE),
+        DELETE(Request.Method.DELETE);
+
+        private final int value;
+        Method(int value) {
+            this.value = value;
+        }
+    }
     private VolleyUi view;
 
     public CoreRest (VolleyUi view){
         this.view = view;
     }
 
-    protected final void getJSONObject (@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener listener){
-        request(new CoreJSONObjectRequest(Request.Method.GET, url, mergeHeaders(headers), null, listener));
+    protected final void requestText(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<String> listener){
+        request(new CoreStringRequest(method.value, url, mergeHeaders(headers), params, listener));
     }
 
-    protected final void postJsonObject(@NonNull String url, @Nullable final Map<String, String> headers, @Nullable JSONObject parmas, @NonNull CoreResponseListener listener){
-        request(new CoreJSONObjectRequest(Request.Method.POST, url, mergeHeaders(headers), parmas, listener));
+    protected final void requestText(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable String body, @NonNull CoreResponseListener<String> listener){
+        request(new CoreStringRequest(method.value, url, mergeHeaders(headers), body, listener));
     }
 
-    protected final void getJSONArray (@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener listener){
-        request(new CoreJSONArrayRequest(Request.Method.GET, url, mergeHeaders(headers), null, listener));
+    protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<JSONObject> listener){
+        request(new CoreJSONObjectRequest(method.value, url, mergeHeaders(headers), params, listener));
     }
 
-    protected final void postJsonArray(@NonNull String url, @Nullable final Map<String, String> headers, @Nullable JSONArray parmas, @NonNull CoreResponseListener listener){
-        request(new CoreJSONArrayRequest(Request.Method.POST, url, mergeHeaders(headers), parmas, listener));
+    protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable String body, @NonNull CoreResponseListener<JSONObject> listener){
+        request(new CoreJSONObjectRequest(method.value, url, mergeHeaders(headers), body, listener));
+    }
+
+    protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<JSONArray> listener){
+        request(new CoreJSONArrayRequest(method.value, url, mergeHeaders(headers), params, listener));
+    }
+
+    protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable String body, @NonNull CoreResponseListener<JSONArray> listener){
+        request(new CoreJSONArrayRequest(method.value, url, mergeHeaders(headers), body, listener));
     }
 
     protected Map<String, String> getDefaultHeaders (){

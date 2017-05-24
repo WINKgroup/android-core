@@ -5,34 +5,32 @@ import android.support.annotation.Nullable;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
-
-import org.json.JSONArray;
+import com.android.volley.toolbox.StringRequest;
 
 import java.util.Map;
 
 /**
- * Created by zoid23 on 23/05/17.
+ * Created by zoid23 on 24/05/17.
  */
 
-class CoreJSONArrayRequest extends JsonArrayRequest {
+public class CoreStringRequest  extends StringRequest {
 
     private Map<String, String> headers, params;
     private String rawBody;
-    private CoreResponseListener<JSONArray> listener;
+    private CoreResponseListener<String> listener;
 
-    CoreJSONArrayRequest(int method, String url, Map<String, String> headers, @Nullable Map<String, String> params, CoreResponseListener<JSONArray> listener) {
+    CoreStringRequest(int method, String url, Map<String, String> headers, @Nullable Map<String, String> params, CoreResponseListener<String> listener) {
         this(method, url, headers, listener);
         this.params = params;
     }
 
-    CoreJSONArrayRequest(int method, String url, Map<String, String> headers, @Nullable String rawBody, CoreResponseListener<JSONArray> listener) {
+    CoreStringRequest(int method, String url, Map<String, String> headers, @Nullable String rawBody, CoreResponseListener<String> listener) {
         this(method, url, headers, listener);
         this.rawBody = rawBody;
     }
 
-    private CoreJSONArrayRequest (int method, String url, Map<String, String> headers, CoreResponseListener<JSONArray> listener){
-        super(method, url, null, listener, listener.getErrorListener());
+    private CoreStringRequest (int method, String url, Map<String, String> headers, CoreResponseListener<String> listener){
+        super(method, url, listener, listener.getErrorListener());
         this.headers = headers;
         this.listener = listener;
     }
@@ -50,14 +48,14 @@ class CoreJSONArrayRequest extends JsonArrayRequest {
     }
 
     @Override
-    public byte[] getBody() {
+    public byte[] getBody() throws AuthFailureError {
         if(rawBody != null)
             return rawBody.getBytes();
         return super.getBody();
     }
 
     @Override
-    protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+    protected Response<String> parseNetworkResponse(NetworkResponse response) {
         listener.setResHeaders(response.headers);
         return super.parseNetworkResponse(response);
     }
