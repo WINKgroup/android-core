@@ -1,12 +1,15 @@
 package by.wink.corexample;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import by.wink.core.CoreController;
+import by.wink.core.MultipleCoreRequests;
+import by.wink.core.MultipleCoreRequests.CtrlRequest;
 import by.wink.core.uielements.CoreActivity;
 import by.wink.corexample.controllers.DevController;
 import by.wink.corexample.models.Developer;
@@ -47,5 +50,15 @@ public class MainActivity extends CoreActivity {
                 content.setText(error);
             }
         });
+
+        final CtrlRequest<ArrayList<Developer>> fRequest = new CtrlRequest<>(devController, "getAll");
+        final CtrlRequest<ArrayList<Developer>> sRequest = new CtrlRequest<>(devController, "getAll");
+        new MultipleCoreRequests(fRequest, sRequest).start(new MultipleCoreRequests.MultipleCoreRequestsResponse() {
+            @Override
+            public void onAllFinished(boolean allSuccess) {
+                fRequest.getResult().get(0).getName();
+            }
+        });
+
     }
 }

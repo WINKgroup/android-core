@@ -21,7 +21,7 @@ public abstract class CoreDefaultErrorResponseListener<T> extends CoreResponseLi
     private CoreController.ParsedResponse response;
 
     /**
-     * Contstructor
+     * Constructor
      *
      * @param response the {@link by.wink.core.CoreController.ParsedResponse} response
      */
@@ -31,6 +31,9 @@ public abstract class CoreDefaultErrorResponseListener<T> extends CoreResponseLi
 
     @Override
     public void onError(VolleyError error) {
-        response.onError(error.getLocalizedMessage());
+        String errorMess = error.getLocalizedMessage();
+        if(errorMess == null) errorMess = error.getMessage();
+        if(errorMess == null) errorMess = "Connection error ... ";
+        response.onError(errorMess);
     }
 }
