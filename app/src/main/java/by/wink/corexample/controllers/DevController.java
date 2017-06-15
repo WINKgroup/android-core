@@ -22,7 +22,7 @@ public class DevController extends CoreController<ApiClient> {
     }
 
 
-    public void getAll (final ParsedResponse<ArrayList<Developer>> responseListener){
+    public void getAll (String param, Integer param2, final ParsedResponse<ArrayList<Developer>> responseListener){
         rest.getDevs(new CoreDefaultErrorResponseListener<JSONArray>(responseListener) {
             @Override
             public void onSuccess(JSONArray response) throws JSONException {

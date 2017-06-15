@@ -36,7 +36,7 @@ public class MainActivity extends CoreActivity {
 
     private void request (){
         content.setText("request ...");
-        devController.getAll(new CoreController.ParsedResponse<ArrayList<Developer>>() {
+        devController.getAll("", 2, new CoreController.ParsedResponse<ArrayList<Developer>>() {
             @Override
             public void onSuccess(ArrayList<Developer> developers) {
                 String result = "";
@@ -51,8 +51,8 @@ public class MainActivity extends CoreActivity {
             }
         });
 
-        final CtrlRequest<ArrayList<Developer>> fRequest = new CtrlRequest<>(devController, "getAll");
-        final CtrlRequest<ArrayList<Developer>> sRequest = new CtrlRequest<>(devController, "getAll");
+        final CtrlRequest<ArrayList<Developer>> fRequest = new CtrlRequest<>(devController, "getAll", "", 0);
+        final CtrlRequest<ArrayList<Developer>> sRequest = new CtrlRequest<>(devController, "getAll", "", 1);
         new MultipleCoreRequests(fRequest, sRequest).start(new MultipleCoreRequests.MultipleCoreRequestsResponse() {
             @Override
             public void onAllFinished(boolean allSuccess) {

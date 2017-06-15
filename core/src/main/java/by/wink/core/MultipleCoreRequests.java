@@ -69,31 +69,24 @@ public class MultipleCoreRequests {
          * Constructor
          *
          * @param controller the controller instance
-         * @param method The controller method name
-         * @param paramsTypes The types of paramas needed from the method
+         * @param methodName The controller method name
+         * @param params the request params used from the {@link CoreController} for to execute the method
          *                    (excluding the {@link by.wink.core.CoreController.ParsedResponse} param, used as last param).
          * @throws IllegalStateException
          */
-        public CtrlRequest (CoreController controller, String method, Class ... paramsTypes) throws IllegalStateException{
-            Class [] allParamsTypes = new Class[paramsTypes.length +1];
-            for(int i = 0; i<paramsTypes.length; i++)
-                allParamsTypes[i] = paramsTypes[i];
-            allParamsTypes[paramsTypes.length] = CoreController.ParsedResponse.class;
+        public CtrlRequest (CoreController controller, String methodName, Object ... params) throws IllegalStateException {
+            this.params.addAll(Arrays.asList(params));
+            Class [] allParamsTypes = new Class[params.length +1];
+            for(int i = 0; i<params.length; i++)
+                allParamsTypes[i] = params[i].getClass();
+            allParamsTypes[params.length] = CoreController.ParsedResponse.class;
 
             try {
-                this.method = controller.getClass().getMethod(method, allParamsTypes);
+                this.method = controller.getClass().getMethod(methodName, allParamsTypes);
             } catch (NoSuchMethodException e) {
                 throw new IllegalStateException(e);
             }
             this.controller = controller;
-        }
-
-        /**
-         * set the request params used from the {@link CoreController} for to execute the method
-         * @param params
-         */
-        public void setParams (Object ... params){
-            this.params.addAll(Arrays.asList(params));
         }
 
         private void request (final CtrlRequestListener listener) throws InvocationTargetException, IllegalAccessException {
