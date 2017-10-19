@@ -17,18 +17,19 @@ import java.util.Map;
 
 class CoreJSONObjectRequest extends JsonObjectRequest {
 
-    Map<String, String> headers, params;
+    Map<String, String> headers;
     private String rawBody;
     private CoreResponseListener<JSONObject> listener;
-
-    CoreJSONObjectRequest(int method, String url, Map<String, String> headers, @Nullable Map<String, String> params, CoreResponseListener<JSONObject> listener) {
-        this(method, url, headers, listener);
-        this.params = params;
-    }
 
     CoreJSONObjectRequest(int method, String url, Map<String, String> headers, @Nullable String rawBody, CoreResponseListener<JSONObject> listener) {
         this(method, url, headers, listener);
         this.rawBody = rawBody;
+    }
+
+    CoreJSONObjectRequest(int method, String url, Map<String, String> headers, @Nullable JSONObject body, CoreResponseListener<JSONObject> listener) {
+        super(method, url, body, listener, listener.getErrorListener());
+        this.headers = headers;
+        this.listener = listener;
     }
 
     private CoreJSONObjectRequest (int method, String url, Map<String, String> headers, CoreResponseListener<JSONObject> listener){
@@ -40,13 +41,6 @@ class CoreJSONObjectRequest extends JsonObjectRequest {
     @Override
     public Map<String, String> getHeaders() {
         return headers;
-    }
-
-    @Override
-    protected Map<String, String> getParams() throws AuthFailureError {
-        if(params != null)
-            return params;
-        return super.getParams();
     }
 
     @Override

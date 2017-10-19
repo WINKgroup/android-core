@@ -110,7 +110,7 @@ public abstract class CoreRest {
      * @param params The request params
      * @param listener The text request listener
      */
-    protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<JSONObject> listener){
+    protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable JSONObject params, @NonNull CoreResponseListener<JSONObject> listener){
         request(new CoreJSONObjectRequest(method.value, url, mergeHeaders(headers), params, listener));
     }
 
@@ -147,7 +147,7 @@ public abstract class CoreRest {
      * @param params The request params
      * @param listener The text request listener
      */
-    protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @NonNull CoreResponseListener<JSONArray> listener){
+    protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable JSONArray params, @NonNull CoreResponseListener<JSONArray> listener){
         request(new CoreJSONArrayRequest(method.value, url, mergeHeaders(headers), params, listener));
     }
 

@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -17,18 +18,19 @@ import java.util.Map;
 
 class CoreJSONArrayRequest extends JsonArrayRequest {
 
-    private Map<String, String> headers, params;
+    private Map<String, String> headers;
     private String rawBody;
     private CoreResponseListener<JSONArray> listener;
-
-    CoreJSONArrayRequest(int method, String url, Map<String, String> headers, @Nullable Map<String, String> params, CoreResponseListener<JSONArray> listener) {
-        this(method, url, headers, listener);
-        this.params = params;
-    }
 
     CoreJSONArrayRequest(int method, String url, Map<String, String> headers, @Nullable String rawBody, CoreResponseListener<JSONArray> listener) {
         this(method, url, headers, listener);
         this.rawBody = rawBody;
+    }
+
+    CoreJSONArrayRequest(int method, String url, Map<String, String> headers, @Nullable JSONArray body, CoreResponseListener<JSONArray> listener) {
+        super(method, url, body, listener, listener.getErrorListener());
+        this.headers = headers;
+        this.listener = listener;
     }
 
     private CoreJSONArrayRequest (int method, String url, Map<String, String> headers, CoreResponseListener<JSONArray> listener){
@@ -40,13 +42,6 @@ class CoreJSONArrayRequest extends JsonArrayRequest {
     @Override
     public Map<String, String> getHeaders() {
         return headers;
-    }
-
-    @Override
-    protected Map<String, String> getParams() throws AuthFailureError {
-        if(params != null)
-            return params;
-        return super.getParams();
     }
 
     @Override
