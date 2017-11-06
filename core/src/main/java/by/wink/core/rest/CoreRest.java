@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import by.wink.core.rest.utilities.MultipartRequest;
 import by.wink.core.uielements.VolleyUi;
 
 /**
@@ -162,6 +163,19 @@ public abstract class CoreRest {
      */
     protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable String body, @NonNull CoreResponseListener<JSONArray> listener){
         request(new CoreJSONArrayRequest(method.value, url, mergeHeaders(headers), body, listener));
+    }
+
+    /**
+     * Make a request for to make a multipart request
+     *
+     * @param url The url
+     * @param headers The request headers
+     * @param body The request body
+     * @param multipart The request multipart
+     * @param listener The text request listener
+     */
+    protected final void requestMultipart(@NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> body, @Nullable Map<String, CoreMultipartRequest.DataPart> multipart, @NonNull CoreResponseListener<String> listener){
+        request(new CoreMultipartRequest(url, mergeHeaders(headers), body, multipart, listener));
     }
 
     /**

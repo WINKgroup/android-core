@@ -62,4 +62,14 @@ public abstract class CoreController<R extends CoreRest> {
          */
         void onError(String error);
     }
+
+    public interface ParsedProgressResponse <T> extends ParsedResponse<T>{
+        /**
+         * On request progress
+         *
+         * @param bytesWritten the request's written bytes.
+         * @param totalSize the request's total bytes size.
+         */
+        void onSuccess(long bytesWritten, long totalSize);
+    }
 }
