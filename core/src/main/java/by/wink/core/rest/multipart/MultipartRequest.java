@@ -1,4 +1,4 @@
-package by.wink.core.rest.utilities;
+package by.wink.core.rest.multipart;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -11,59 +11,49 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
-
-import static android.R.attr.data;
 
 /**
  * Created by zoid23 on 06/11/17.
  */
 
-public class MultipartRequest extends Request<NetworkResponse> {
+public abstract class MultipartRequest extends Request<NetworkResponse> {
     private final String twoHyphens = "--";
     private final String lineEnd = "\r\n";
     private final String boundary = "apiclient-" + System.currentTimeMillis();
 
-    private Response.Listener<String> mListener;
     private Response.ErrorListener mErrorListener;
     private Map<String, String> mHeaders;
+    private Map<String, String> params;
+    private Map<String, FileData> multipart;
+
 
     /**
      * Default constructor with predefined header and post method.
      *
+     * @param method        the request method
      * @param url           request destination
      * @param headers       predefined custom header
-     * @param listener      on success achieved 200 code from request
      * @param errorListener on error http or library timeout
      */
-    public MultipartRequest(String url, Map<String, String> headers,
-                                  Response.Listener<String> listener,
-                                  Response.ErrorListener errorListener) {
-        super(Method.POST, url, errorListener);
-        this.mListener = listener;
+    public MultipartRequest(int method, String url, Map<String, String> headers, Map<String, String> params, Map<String, FileData> multipart, Response.ErrorListener errorListener) {
+        super(method, url, errorListener);
         this.mErrorListener = errorListener;
         this.mHeaders = headers;
+        this.params = params;
+        this.multipart = multipart;
     }
 
-    /**
-     * Constructor with option method and default header configuration.
-     *
-     * @param method        method for now accept POST and GET only
-     * @param url           request destination
-     * @param listener      on success event handler
-     * @param errorListener on error event handler
-     */
-    public MultipartRequest(int method, String url,
-                                  Response.Listener<String> listener,
-                                  Response.ErrorListener errorListener) {
-        super(method, url, errorListener);
-        this.mListener = listener;
-        this.mErrorListener = errorListener;
+    @Override
+    protected Map<String, String> getParams() throws AuthFailureError {
+        return params;
+    }
+
+    protected Map<String, FileData> getByteData() throws AuthFailureError {
+        return multipart;
     }
 
     @Override
@@ -89,7 +79,7 @@ public class MultipartRequest extends Request<NetworkResponse> {
             }
 
             // populate data byte payload
-            Map<String, DataPart> data = getByteData();
+            Map<String, FileData> data = getByteData();
             if (data != null && data.size() > 0) {
                 dataParse(dos, data);
             }
@@ -101,16 +91,6 @@ public class MultipartRequest extends Request<NetworkResponse> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    /**
-     * Custom method handle data payload.
-     *
-     * @return Map data part label with data byte
-     * @throws AuthFailureError
-     */
-    protected Map<String, DataPart> getByteData() throws AuthFailureError {
         return null;
     }
 
@@ -126,9 +106,7 @@ public class MultipartRequest extends Request<NetworkResponse> {
     }
 
     @Override
-    protected void deliverResponse(NetworkResponse response) {
-        mListener.onResponse(new String(response.data));
-    }
+    protected abstract void deliverResponse(NetworkResponse response);
 
     @Override
     public void deliverError(VolleyError error) {
@@ -160,8 +138,8 @@ public class MultipartRequest extends Request<NetworkResponse> {
      * @param data             loop through data
      * @throws IOException
      */
-    private void dataParse(DataOutputStream dataOutputStream, Map<String, DataPart> data) throws IOException {
-        for (Map.Entry<String, DataPart> entry : data.entrySet()) {
+    private void dataParse(DataOutputStream dataOutputStream, Map<String, FileData> data) throws IOException {
+        for (Map.Entry<String, FileData> entry : data.entrySet()) {
             buildDataPart(dataOutputStream, entry.getValue(), entry.getKey());
         }
     }
@@ -186,11 +164,11 @@ public class MultipartRequest extends Request<NetworkResponse> {
      * Write data file into header and data output stream.
      *
      * @param dataOutputStream data output stream handle data parsing
-     * @param dataFile         data byte as DataPart from collection
+     * @param dataFile         data byte as FileData from collection
      * @param inputName        name of data input
      * @throws IOException
      */
-    private void buildDataPart(DataOutputStream dataOutputStream, DataPart dataFile, String inputName) throws IOException {
+    private void buildDataPart(DataOutputStream dataOutputStream, FileData dataFile, String inputName) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
         dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" +
                 inputName + "\"; filename=\"" + dataFile.getFileName() + "\"" + lineEnd);
@@ -216,71 +194,5 @@ public class MultipartRequest extends Request<NetworkResponse> {
         }
 
         dataOutputStream.writeBytes(lineEnd);
-    }
-
-    /**
-     * Simple data container use for passing byte file
-     */
-    public static class DataPart {
-        private String fileName;
-        private byte[] content;
-        private String type;
-
-        /**
-         * Default data part
-         */
-        public DataPart() {
-        }
-
-        /**
-         * Constructor with data.
-         *
-         * @param name label of data
-         * @param data byte data
-         */
-        public DataPart(String name, byte[] data) {
-            fileName = name;
-            content = data;
-        }
-
-        /**
-         * Constructor with mime data type.
-         *
-         * @param name     label of data
-         * @param data     byte data
-         * @param mimeType mime data like "image/jpeg"
-         */
-        public DataPart(String name, byte[] data, String mimeType) {
-            this(name, data);
-            type = mimeType;
-        }
-
-
-        /**
-         * Getter file name.
-         *
-         * @return file name
-         */
-        public String getFileName() {
-            return fileName;
-        }
-
-        /**
-         * Getter content.
-         *
-         * @return byte file data
-         */
-        public byte[] getContent() {
-            return content;
-        }
-
-        /**
-         * Getter mime type.
-         *
-         * @return mime type
-         */
-        public String getType() {
-            return type;
-        }
     }
 }

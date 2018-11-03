@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import by.wink.core.rest.utilities.MultipartRequest;
+import by.wink.core.rest.multipart.FileData;
 import by.wink.core.uielements.VolleyUi;
 
 /**
@@ -55,18 +55,7 @@ public abstract class CoreRest {
 
 
     /**
-     * Make a get request for to get a text response
-     *
-     * @param url The url
-     * @param headers The request headers
-     * @param listener The text request listener
-     */
-    protected final void getText(@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<String> listener){
-        request(new CoreStringRequest(Method.GET.value, url, mergeHeaders(headers), (String) null, listener));
-    }
-
-    /**
-     * Make a request for to get a text response
+     * Make a request to get a text response
      *
      * @param method The request method as a {@link Method} enum
      * @param url The url
@@ -79,7 +68,7 @@ public abstract class CoreRest {
     }
 
     /**
-     * Make a request for to get a text response
+     * Make a request to get a text response
      *
      * @param method The request method as a {@link Method} enum
      * @param url The url
@@ -92,18 +81,21 @@ public abstract class CoreRest {
     }
 
     /**
-     * Make a get request for to get a {@link JSONObject} response
+     * Make a request to get a text response
      *
+     * @param method The request method as a {@link Method} enum
      * @param url The url
      * @param headers The request headers
+     * @param params The request params
+     * @param multipart The request multipart
      * @param listener The text request listener
      */
-    protected final void getJsonObject(@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<JSONObject> listener){
-        request(new CoreJSONObjectRequest(Method.GET.value, url, mergeHeaders(headers), (String) null, listener));
+    protected final void requestText(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @Nullable Map<String, FileData> multipart, @NonNull CoreResponseListener<String> listener){
+        request(new CoreStringMultipartRequest(method.value, url, mergeHeaders(headers), params, multipart, listener));
     }
 
     /**
-     * Make a request for to get a {@link JSONObject} response
+     * Make a request to get a {@link JSONObject} response
      *
      * @param method The request method as a {@link Method} enum
      * @param url The url
@@ -116,7 +108,7 @@ public abstract class CoreRest {
     }
 
     /**
-     * Make a request for to get a {@link JSONObject} response
+     * Make a request to get a {@link JSONObject} response
      *
      * @param method The request method as a {@link Method} enum
      * @param url The url
@@ -129,15 +121,19 @@ public abstract class CoreRest {
     }
 
     /**
-     * Make a get request for to get a {@link JSONArray} response
+     * Make a request to get a {@link JSONObject} response
      *
+     * @param method The request method as a {@link Method} enum
      * @param url The url
      * @param headers The request headers
+     * @param params The request params
+     * @param multipart The request multipart
      * @param listener The text request listener
      */
-    protected final void getJsonArray(@NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<JSONArray> listener){
-        request(new CoreJSONArrayRequest(Method.GET.value, url, mergeHeaders(headers), (String) null, listener));
+    protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @Nullable Map<String, FileData> multipart, @NonNull CoreResponseListener<JSONObject> listener){
+        request(new CoreJSONObjectMultipartRequest(method.value, url, mergeHeaders(headers), params, multipart, listener));
     }
+
 
     /**
      * Make a request for to get a {@link JSONArray} response
@@ -166,16 +162,17 @@ public abstract class CoreRest {
     }
 
     /**
-     * Make a request for to make a multipart request
+     * Make a request to get a {@link JSONArray} response
      *
+     * @param method The request method as a {@link Method} enum
      * @param url The url
      * @param headers The request headers
-     * @param body The request body
+     * @param params The request params
      * @param multipart The request multipart
      * @param listener The text request listener
      */
-    protected final void requestMultipart(@NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> body, @Nullable Map<String, CoreMultipartRequest.DataPart> multipart, @NonNull CoreResponseListener<String> listener){
-        request(new CoreMultipartRequest(url, mergeHeaders(headers), body, multipart, listener));
+    protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @Nullable Map<String, FileData> multipart, @NonNull CoreResponseListener<JSONArray> listener){
+        request(new CoreJSONArrayMultipartRequest(method.value, url, mergeHeaders(headers), params, multipart, listener));
     }
 
     /**
