@@ -60,6 +60,18 @@ public abstract class CoreRest {
      * @param method The request method as a {@link Method} enum
      * @param url The url
      * @param headers The request headers
+     * @param listener The text request listener
+     */
+    protected final void requestText(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<String> listener){
+        request(new CoreStringRequest(method.value, url, mergeHeaders(headers), (String) null, listener));
+    }
+
+    /**
+     * Make a request to get a text response
+     *
+     * @param method The request method as a {@link Method} enum
+     * @param url The url
+     * @param headers The request headers
      * @param params The request params
      * @param listener The text request listener
      */
@@ -92,6 +104,18 @@ public abstract class CoreRest {
      */
     protected final void requestText(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @Nullable Map<String, String> params, @Nullable Map<String, FileData> multipart, @NonNull CoreResponseListener<String> listener){
         request(new CoreStringMultipartRequest(method.value, url, mergeHeaders(headers), params, multipart, listener));
+    }
+
+    /**
+     * Make a request to get a {@link JSONObject} response
+     *
+     * @param method The request method as a {@link Method} enum
+     * @param url The url
+     * @param headers The request headers
+     * @param listener The text request listener
+     */
+    protected final void requestJSONObject(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<JSONObject> listener){
+        request(new CoreJSONObjectRequest(method.value, url, mergeHeaders(headers), (String) null, listener));
     }
 
     /**
@@ -134,6 +158,17 @@ public abstract class CoreRest {
         request(new CoreJSONObjectMultipartRequest(method.value, url, mergeHeaders(headers), params, multipart, listener));
     }
 
+    /**
+     * Make a request for to get a {@link JSONArray} response
+     *
+     * @param method The request method as a {@link Method} enum
+     * @param url The url
+     * @param headers The request headers
+     * @param listener The text request listener
+     */
+    protected final void requestJsonArray(@NonNull Method method, @NonNull String url, @Nullable final Map<String, String> headers, @NonNull CoreResponseListener<JSONArray> listener){
+        request(new CoreJSONArrayRequest(method.value, url, mergeHeaders(headers), (String) null, listener));
+    }
 
     /**
      * Make a request for to get a {@link JSONArray} response

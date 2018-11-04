@@ -20,7 +20,7 @@ public class UploadController extends CoreController<UploadApiClient> {
         rest.postImage(f, new CoreDefaultErrorResponseListener<JSONObject>(res) {
             @Override
             public void onSuccess(JSONObject response) throws JSONException {
-                res.onSuccess(response.getString("fileUrl"));
+                res.onSuccess(UploadApiClient.BASE_URL + response.getString("fileUrl"));
             }
         });
     }

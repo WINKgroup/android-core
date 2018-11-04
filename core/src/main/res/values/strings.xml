@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Core</string>
+    <string name="loading_url_tag">loading_url_tag</string>
 </resources>

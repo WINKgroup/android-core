@@ -21,6 +21,7 @@ import by.wink.core.CoreController;
 import by.wink.core.MultipleCoreRequests;
 import by.wink.core.MultipleCoreRequests.CtrlRequest;
 import by.wink.core.uielements.CoreActivity;
+import by.wink.core.uielements.CoreImageLoader;
 import by.wink.corexample.controllers.DevController;
 import by.wink.corexample.controllers.UploadController;
 import by.wink.corexample.models.Developer;
@@ -105,13 +106,11 @@ public class MainActivity extends CoreActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-            uploadedImage.setImageBitmap(bitmap);
-
             uploadController.upload(new File(picturePath), new CoreController.ParsedResponse<String>() {
                 @Override
                 public void onSuccess(String s) {
                     Log.d(TAG, s);
+                    CoreImageLoader.load(s).withDefault(R.mipmap.ic_launcher_round).animated(android.R.anim.fade_out).into(uploadedImage);
                 }
 
                 @Override

@@ -17,7 +17,7 @@ import by.wink.core.uielements.VolleyUi;
 
 public class UploadApiClient extends CoreRest {
 
-    private static final String BASE_URL = "http://5db2a194.ngrok.io/";
+    public static final String BASE_URL = "http://306b40c9.ngrok.io";
 
     public UploadApiClient(VolleyUi view) {
         super(view);
@@ -36,13 +36,13 @@ public class UploadApiClient extends CoreRest {
     public void postImage (File file, CoreResponseListener<JSONObject> responseListener){
         Map<String, FileData> files = new HashMap<>();
         Map<String, String> body = new HashMap<>();
-        body.put("cazzo", "cazzo");
+        body.put("foo", "bar");
         try {
             files.put("image", new FileData("imageLabel", file, "image/jpeg"));
         } catch (IOException e) {
             e.printStackTrace();
             responseListener.onError(new VolleyError(e.getMessage()));
         }
-        requestJSONObject(Method.POST, BASE_URL+"fileUpload?cazzo=cazzo", null, body, files, responseListener);
+        requestJSONObject(Method.POST, BASE_URL+"/fileUpload?foo=bar", null, body, files, responseListener);
     }
 }
