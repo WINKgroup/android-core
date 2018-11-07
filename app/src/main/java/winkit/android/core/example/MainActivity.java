@@ -40,7 +40,7 @@ public class MainActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        content = (TextView) findViewById(R.id.content_text);
+        content = findViewById(R.id.content_text);
         content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +48,7 @@ public class MainActivity extends CoreActivity {
             }
         });
         request ();
-        uploadedImage = (ImageView) findViewById(R.id.uploaded_image);
+        uploadedImage = findViewById(R.id.uploaded_image);
 
         findViewById(R.id.upload_button).setOnClickListener(new View.OnClickListener() {
             @Override
